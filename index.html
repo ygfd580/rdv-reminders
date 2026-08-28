@@ -1,26 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RDV & Reminders</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Supabase via CDN (pas besoin d'installer quoi que ce soit) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RDV & Reminders</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
-    <div class="container">
-        <h1>RDV & Reminders</h1>
-
-        <!-- Zone qui change selon si on est connecté ou non -->
-        <div id="app">
-            <p>Chargement...</p>
-        </div>
+  <div class="container">
+    <h1>RDV & Reminders</h1>
+    <div id="app">
+      <p class="loading">Chargement...</p>
     </div>
-
-    <script src="app.js"></script>
+  </div>
+  <script src="app.js"></script>
 </body>
-
 </html>
