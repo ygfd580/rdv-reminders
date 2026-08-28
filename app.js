@@ -1,10 +1,10 @@
 // ======================
 // CONFIGURATION SUPABASE
 // ======================
-const SUPABASE_URL = 'https://txovnfqhbmqfhwyihdil.supabase.co/rest/v1/'
+const SUPABASE_URL = 'https://txovnfqhbmqfhwyihdil.supabase.co'
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4b3ZuZnFoYm1xZmh3eWloZGlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NTA5ODcsImV4cCI6MjEwMzQyNjk4N30.bLUlTmNyHJlP52H6dfANccJ8JkWm7f_i031AEOAUDUo'
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // ======================
 const app = document.getElementById('app')
@@ -13,7 +13,7 @@ const app = document.getElementById('app')
 // VÉRIFIER LA SESSION AU DÉMARRAGE
 // ======================
 async function init() {
-  const { data: { session } } = await supabase.auth.getSession()
+  const { data: { session } } = await supabaseClient.auth.getSession()
 
   if (session) {
     showApp(session.user)
@@ -21,8 +21,7 @@ async function init() {
     showAuth()
   }
 
-  // Écouter les changements de connexion
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabaseClient.auth.onAuthStateChange((event, session) => {
     if (session) {
       showApp(session.user)
     } else {
@@ -102,7 +101,7 @@ async function login() {
   message.textContent = 'Connexion...'
   message.className = 'message'
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password })
 
   if (error) {
     message.textContent = error.message
@@ -118,7 +117,7 @@ async function signup() {
   message.textContent = 'Création du compte...'
   message.className = 'message'
 
-  const { error } = await supabase.auth.signUp({ email, password })
+  const { error } = await supabaseClient.auth.signUp({ email, password })
 
   if (error) {
     message.textContent = error.message
@@ -130,7 +129,7 @@ async function signup() {
 }
 
 async function logout() {
-  await supabase.auth.signOut()
+  await supabaseClient.auth.signOut()
 }
 
 // ======================
@@ -151,9 +150,9 @@ async function addReminder() {
   formMessage.textContent = 'Ajout en cours...'
   formMessage.className = 'message'
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await supabaseClient.auth.getUser()
 
-  const { error } = await supabase.from('reminders').insert({
+  const { error } = await supabaseClient.from('reminders').insert({
     user_id: user.id,
     title,
     description: description || null,
@@ -177,7 +176,7 @@ async function loadReminders() {
   const list = document.getElementById('remindersList')
   list.innerHTML = '<p class="loading">Chargement...</p>'
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('reminders')
     .select('*')
     .order('start_at', { ascending: true })
@@ -207,7 +206,7 @@ async function loadReminders() {
 async function deleteReminder(id) {
   if (!confirm('Supprimer ce rappel ?')) return
 
-  const { error } = await supabase.from('reminders').delete().eq('id', id)
+  const { error } = await supabaseClient.from('reminders').delete().eq('id', id)
 
   if (!error) {
     loadReminders()
