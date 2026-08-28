@@ -7,103 +7,228 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // ======================
-// ÉLÉMENTS DE LA PAGE
-// ======================
 const app = document.getElementById('app')
 
 // ======================
-// VÉRIFIER LA SESSION
+// VÉRIFIER LA SESSION AU DÉMARRAGE
 // ======================
-async function checkSession() {
-    const { data: { session } } = await supabase.auth.getSession()
+async function init() {
+  const { data: { session } } = await supabase.auth.getSession()
 
+  if (session) {
+    showApp(session.user)
+  } else {
+    showAuth()
+  }
+
+  // Écouter les changements de connexion
+  supabase.auth.onAuthStateChange((event, session) => {
     if (session) {
-        showLoggedIn(session.user)
+      showApp(session.user)
     } else {
-        showLoginForm()
+      showAuth()
     }
+  })
 }
 
 // ======================
-// AFFICHER FORMULAIRE DE CONNEXION
+// PAGE CONNEXION / INSCRIPTION
 // ======================
-function showLoginForm() {
-    app.innerHTML = `
+function showAuth() {
+  app.innerHTML = `
     <div class="form-group">
       <label>Email</label>
-      <input type="email" id="email" placeholder="ton@email.com">
+      <input type="email" id="email" placeholder="ex: monemail@gmail.com">
     </div>
     <div class="form-group">
       <label>Mot de passe</label>
-      <input type="password" id="password" placeholder="••••••••">
+      <input type="password" id="password" placeholder="Minimum 6 caractères">
     </div>
-    <button id="loginBtn">Se connecter</button>
-    <button id="signupBtn" style="background:#16a34a; margin-left:10px;">Créer un compte</button>
-    <p id="message" class="error"></p>
+    <button class="btn-primary" id="loginBtn">Se connecter</button>
+    <button class="btn-success" id="signupBtn">Créer un compte</button>
+    <p id="message" class="message"></p>
   `
 
-    document.getElementById('loginBtn').addEventListener('click', login)
-    document.getElementById('signupBtn').addEventListener('click', signup)
+  document.getElementById('loginBtn').onclick = login
+  document.getElementById('signupBtn').onclick = signup
 }
 
 // ======================
-// AFFICHER QUAND ON EST CONNECTÉ
+// PAGE PRINCIPALE (connecté)
 // ======================
-function showLoggedIn(user) {
-    app.innerHTML = `
-    <p>Connecté en tant que : <strong>${user.email}</strong></p>
-    <button id="logoutBtn">Se déconnecter</button>
-    <hr style="margin: 20px 0;">
-    <p>Prochaine étape : on ajoutera le calendrier et les rappels ici.</p>
+async function showApp(user) {
+  app.innerHTML = `
+    <div class="user-info">
+      <p>Connecté : <strong>${user.email}</strong></p>
+      <button class="btn-secondary" id="logoutBtn" style="width:auto; margin-top:8px;">Se déconnecter</button>
+    </div>
+
+    <h2>Nouveau RDV / Rappel</h2>
+    <div class="form-group">
+      <label>Titre</label>
+      <input type="text" id="title" placeholder="Ex: Inscription aides">
+    </div>
+    <div class="form-group">
+      <label>Description (optionnel)</label>
+      <textarea id="description" rows="2" placeholder="Détails..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Date et heure</label>
+      <input type="datetime-local" id="start_at">
+    </div>
+    <button class="btn-primary" id="addBtn">Ajouter</button>
+    <p id="formMessage" class="message"></p>
+
+    <h2>Mes rappels</h2>
+    <div id="remindersList">
+      <p class="loading">Chargement des rappels...</p>
+    </div>
   `
 
-    document.getElementById('logoutBtn').addEventListener('click', logout)
+  document.getElementById('logoutBtn').onclick = logout
+  document.getElementById('addBtn').onclick = addReminder
+
+  loadReminders()
 }
 
 // ======================
-// FONCTIONS AUTH
+// AUTHENTIFICATION
 // ======================
 async function login() {
-    const email = document.getElementById('email').value
-    const password = document.getElementById('password').value
-    const message = document.getElementById('message')
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
+  const message = document.getElementById('message')
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-    })
+  message.textContent = 'Connexion...'
+  message.className = 'message'
 
-    if (error) {
-        message.textContent = error.message
-    } else {
-        showLoggedIn(data.user)
-    }
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) {
+    message.textContent = error.message
+    message.className = 'message error'
+  }
 }
 
 async function signup() {
-    const email = document.getElementById('email').value
-    const password = document.getElementById('password').value
-    const message = document.getElementById('message')
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
+  const message = document.getElementById('message')
 
-    const { data, error } = await supabase.auth.signUp({
-        email,
-        password
-    })
+  message.textContent = 'Création du compte...'
+  message.className = 'message'
 
-    if (error) {
-        message.textContent = error.message
-    } else {
-        message.style.color = 'green'
-        message.textContent = 'Compte créé ! Vérifie ton email pour confirmer.'
-    }
+  const { error } = await supabase.auth.signUp({ email, password })
+
+  if (error) {
+    message.textContent = error.message
+    message.className = 'message error'
+  } else {
+    message.textContent = 'Compte créé ! Vérifie ton email pour confirmer (regarde aussi les spams).'
+    message.className = 'message success'
+  }
 }
 
 async function logout() {
-    await supabase.auth.signOut()
-    showLoginForm()
+  await supabase.auth.signOut()
+}
+
+// ======================
+// GESTION DES RAPPELS
+// ======================
+async function addReminder() {
+  const title = document.getElementById('title').value.trim()
+  const description = document.getElementById('description').value.trim()
+  const start_at = document.getElementById('start_at').value
+  const formMessage = document.getElementById('formMessage')
+
+  if (!title || !start_at) {
+    formMessage.textContent = 'Titre et date sont obligatoires'
+    formMessage.className = 'message error'
+    return
+  }
+
+  formMessage.textContent = 'Ajout en cours...'
+  formMessage.className = 'message'
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const { error } = await supabase.from('reminders').insert({
+    user_id: user.id,
+    title,
+    description: description || null,
+    start_at: new Date(start_at).toISOString()
+  })
+
+  if (error) {
+    formMessage.textContent = error.message
+    formMessage.className = 'message error'
+  } else {
+    formMessage.textContent = 'Rappel ajouté !'
+    formMessage.className = 'message success'
+    document.getElementById('title').value = ''
+    document.getElementById('description').value = ''
+    document.getElementById('start_at').value = ''
+    loadReminders()
+  }
+}
+
+async function loadReminders() {
+  const list = document.getElementById('remindersList')
+  list.innerHTML = '<p class="loading">Chargement...</p>'
+
+  const { data, error } = await supabase
+    .from('reminders')
+    .select('*')
+    .order('start_at', { ascending: true })
+
+  if (error) {
+    list.innerHTML = `<p class="message error">${error.message}</p>`
+    return
+  }
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<p class="empty">Aucun rappel pour le moment.</p>'
+    return
+  }
+
+  list.innerHTML = data.map(r => `
+    <div class="reminder-card">
+      <h3>${r.title}</h3>
+      <p>${r.description || ''}</p>
+      <p><strong>${formatDate(r.start_at)}</strong></p>
+      <div class="reminder-actions">
+        <button class="btn-danger" onclick="deleteReminder('${r.id}')">Supprimer</button>
+      </div>
+    </div>
+  `).join('')
+}
+
+async function deleteReminder(id) {
+  if (!confirm('Supprimer ce rappel ?')) return
+
+  const { error } = await supabase.from('reminders').delete().eq('id', id)
+
+  if (!error) {
+    loadReminders()
+  } else {
+    alert('Erreur : ' + error.message)
+  }
+}
+
+function formatDate(iso) {
+  const d = new Date(iso)
+  return d.toLocaleString('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
 }
 
 // ======================
 // DÉMARRAGE
 // ======================
-checkSession()
+init()
