@@ -9,23 +9,25 @@
   <style>
     :root {
       --bg: #09090b;
-      --surface: #18181b;
-      --surface-2: #27272a;
-      --border: #3f3f46;
+      --card: #18181b;
+      --border: #27272a;
       --text: #fafafa;
-      --text-2: #a1a1aa;
+      --muted: #a1a1aa;
       --primary: #8b5cf6;
-      --primary-soft: rgba(139, 92, 246, 0.15);
+      --primary-hover: #7c3aed;
       --green: #22c55e;
-      --orange: #f59e0b;
       --red: #ef4444;
-      --radius: 16px;
+      --radius: 14px;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -38,47 +40,45 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      background: 
-        radial-gradient(ellipse at top, rgba(139, 92, 246, 0.12), transparent 60%),
-        var(--bg);
+      padding: 24px;
+      background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.1), transparent 65%);
     }
 
-    .auth-box {
+    .auth-card {
       width: 100%;
       max-width: 400px;
-      background: var(--surface);
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 40px 32px;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+      border-radius: 20px;
+      padding: 36px 28px;
     }
 
     .logo {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
-      letter-spacing: -0.5px;
+      text-align: center;
+      margin-bottom: 6px;
       background: linear-gradient(135deg, #c4b5fd, #60a5fa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-align: center;
-      margin-bottom: 6px;
     }
 
-    .auth-sub {
+    .auth-subtitle {
       text-align: center;
-      color: var(--text-2);
-      font-size: 15px;
-      margin-bottom: 32px;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 28px;
     }
 
-    .field { margin-bottom: 18px; }
+    .field {
+      margin-bottom: 16px;
+    }
 
     label {
       display: block;
       font-size: 13px;
       font-weight: 500;
-      color: var(--text-2);
+      color: var(--muted);
       margin-bottom: 6px;
     }
 
@@ -86,28 +86,30 @@
       width: 100%;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
+      border-radius: 10px;
+      padding: 11px 13px;
       color: var(--text);
       font-size: 15px;
       outline: none;
-      transition: 0.2s;
+      transition: border-color 0.2s;
     }
 
     input:focus, textarea:focus, select:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-soft);
     }
 
-    textarea { min-height: 90px; resize: vertical; }
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
 
     .btn {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
-      padding: 13px;
-      border-radius: 12px;
+      padding: 12px;
+      border-radius: 10px;
       font-weight: 600;
       font-size: 15px;
       border: none;
@@ -115,57 +117,71 @@
       transition: 0.2s;
     }
 
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .btn-primary {
       background: var(--primary);
       color: white;
     }
 
-    .btn-primary:hover {
-      background: #7c3aed;
-      transform: translateY(-1px);
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
     }
 
     .btn-ghost {
       background: transparent;
-      color: var(--text-2);
+      color: var(--muted);
       border: 1px solid var(--border);
     }
 
     .btn-ghost:hover {
-      background: var(--surface-2);
+      background: var(--border);
       color: var(--text);
     }
 
-    .auth-switch {
+    .auth-footer {
       text-align: center;
-      margin-top: 24px;
+      margin-top: 22px;
       font-size: 14px;
-      color: var(--text-2);
+      color: var(--muted);
     }
 
-    .auth-switch span {
+    .auth-footer span {
       color: #a78bfa;
       cursor: pointer;
       font-weight: 600;
     }
 
-    .error-box {
+    .message {
       display: none;
-      background: rgba(239, 68, 68, 0.12);
-      color: #fca5a5;
-      padding: 12px 14px;
+      padding: 11px 13px;
       border-radius: 10px;
       font-size: 14px;
       margin-bottom: 16px;
     }
 
+    .message.error {
+      background: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+    }
+
+    .message.success {
+      background: rgba(34, 197, 94, 0.12);
+      color: #86efac;
+    }
+
     /* ========== APP ========== */
-    #app { display: none; }
+    #app {
+      display: none;
+    }
 
     .container {
-      max-width: 640px;
+      max-width: 620px;
       margin: 0 auto;
-      padding: 24px 16px 80px;
+      padding: 24px 16px 60px;
     }
 
     header {
@@ -173,65 +189,81 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 28px;
+      gap: 12px;
     }
 
-    .greeting {
+    .greeting h1 {
       font-size: 22px;
       font-weight: 600;
-      letter-spacing: -0.3px;
     }
 
-    .greeting span {
-      color: var(--text-2);
-      font-weight: 400;
-      font-size: 15px;
-      display: block;
+    .greeting p {
+      font-size: 13px;
+      color: var(--muted);
       margin-top: 2px;
     }
 
-    .user-actions {
+    .user-area {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
     .avatar {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: linear-gradient(135deg, #8b5cf6, #3b82f6);
       display: grid;
       place-items: center;
       font-weight: 600;
-      font-size: 15px;
+      font-size: 14px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .stat strong {
+      color: var(--text);
     }
 
     /* Formulaire */
-    .create-card {
-      background: var(--surface);
+    .create-box {
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 22px;
+      border-radius: 16px;
+      padding: 20px;
       margin-bottom: 32px;
     }
 
-    .create-title {
-      font-size: 16px;
+    .create-box h2 {
+      font-size: 15px;
       font-weight: 600;
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      margin-bottom: 16px;
     }
 
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
 
-    @media (max-width: 500px) {
-      .grid-2 { grid-template-columns: 1fr; }
+    @media (max-width: 480px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* Groupes */
@@ -240,70 +272,57 @@
     }
 
     .group-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--text-2);
+      color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
-      padding-left: 4px;
-    }
-
-    /* Carte rappel */
-    .reminder {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 18px;
+      letter-spacing: 0.4px;
       margin-bottom: 10px;
-      transition: 0.2s;
-      position: relative;
+      padding-left: 2px;
     }
 
-    .reminder:hover {
-      border-color: #52525b;
-      background: #1f1f23;
+    /* Carte */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px 16px;
+      margin-bottom: 10px;
+      transition: 0.15s;
     }
 
-    .reminder.today {
-      border-color: rgba(139, 92, 246, 0.4);
-      background: linear-gradient(90deg, rgba(139, 92, 246, 0.08), transparent);
+    .card:hover {
+      border-color: #3f3f46;
     }
 
-    .reminder-top {
+    .card.today {
+      border-color: rgba(139, 92, 246, 0.45);
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.07), transparent);
+    }
+
+    .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .reminder-title {
+    .card-title {
       font-weight: 600;
-      font-size: 16px;
-      line-height: 1.35;
+      font-size: 15px;
     }
 
-    .reminder-time {
+    .card-meta {
       font-size: 13px;
-      color: var(--text-2);
+      color: var(--muted);
       margin-top: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    .reminder-notes {
+    .card-notes {
       margin-top: 10px;
       font-size: 14px;
       color: #d4d4d8;
-      line-height: 1.5;
       white-space: pre-wrap;
-    }
-
-    .badges {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
     }
 
     .badge {
@@ -311,27 +330,28 @@
       font-weight: 600;
       padding: 3px 8px;
       border-radius: 999px;
+      background: rgba(139, 92, 246, 0.15);
+      color: #c4b5fd;
     }
 
-    .badge.today { background: var(--primary-soft); color: #c4b5fd; }
-    .badge.weekly { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+    .badge.weekly {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+    }
 
-    .reminder-actions {
+    .card-actions {
       display: flex;
       gap: 6px;
-      margin-top: 14px;
-      opacity: 0.7;
+      margin-top: 12px;
     }
 
-    .reminder:hover .reminder-actions { opacity: 1; }
-
     .icon-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
       border: none;
-      background: var(--surface-2);
-      color: var(--text-2);
+      background: #27272a;
+      color: var(--muted);
       cursor: pointer;
       display: grid;
       place-items: center;
@@ -353,26 +373,27 @@
       color: var(--red);
     }
 
-    .empty-state {
+    .empty {
       text-align: center;
-      padding: 48px 20px;
-      color: var(--text-2);
+      padding: 48px 16px;
+      color: var(--muted);
     }
 
-    .empty-state p {
-      margin-top: 12px;
-      font-size: 15px;
+    .empty p {
+      margin-top: 10px;
+      font-size: 14px;
     }
 
     .loading {
       text-align: center;
       padding: 40px;
-      color: var(--text-2);
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .spinner {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border: 3px solid var(--border);
       border-top-color: var(--primary);
       border-radius: 50%;
@@ -380,27 +401,8 @@
       margin: 0 auto 12px;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .stats {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 14px;
-      font-size: 13px;
-      color: var(--text-2);
-    }
-
-    .stat strong {
-      color: var(--text);
-      font-weight: 600;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -408,26 +410,26 @@
 
   <!-- AUTH -->
   <div id="auth-screen">
-    <div class="auth-box">
+    <div class="auth-card">
       <div class="logo">ZenRemind</div>
-      <p class="auth-sub">Tes rendez-vous, simplement organisés</p>
+      <p class="auth-subtitle">Tes rendez-vous, simplement</p>
 
-      <div id="auth-error" class="error-box"></div>
+      <div id="message" class="message"></div>
 
       <form id="auth-form">
         <div class="field">
           <label>Email</label>
-          <input type="email" id="email" required placeholder="toi@exemple.com">
+          <input type="email" id="email" required placeholder="toi@exemple.com" autocomplete="email">
         </div>
         <div class="field">
           <label>Mot de passe</label>
-          <input type="password" id="password" required minlength="6" placeholder="••••••••">
+          <input type="password" id="password" required minlength="6" placeholder="Minimum 6 caractères" autocomplete="current-password">
         </div>
         <button type="submit" class="btn btn-primary" id="auth-btn">Se connecter</button>
       </form>
 
-      <div class="auth-switch">
-        <span id="toggle-mode">Pas encore de compte ? Créer un compte</span>
+      <div class="auth-footer">
+        <span id="toggle-auth">Pas encore de compte ? Créer un compte</span>
       </div>
     </div>
   </div>
@@ -436,33 +438,32 @@
   <div id="app">
     <div class="container">
       <header>
-        <div>
-          <div class="greeting" id="greeting">Bonjour</div>
+        <div class="greeting">
+          <h1 id="greeting-text">Bonjour</h1>
+          <p id="user-email"></p>
         </div>
-        <div class="user-actions">
+        <div class="user-area">
           <div class="avatar" id="avatar">?</div>
-          <button class="btn btn-ghost" style="width:auto;padding:8px 14px;font-size:13px" id="logout-btn">
-            Déconnexion
-          </button>
+          <button class="btn btn-ghost" style="width: auto; padding: 7px 12px; font-size: 13px;" id="logout-btn">Déconnexion</button>
         </div>
       </header>
 
       <div class="stats">
         <div class="stat">Aujourd'hui <strong id="stat-today">0</strong></div>
-        <div class="stat">À venir <strong id="stat-upcoming">0</strong></div>
+        <div class="stat">À venir <strong id="stat-total">0</strong></div>
       </div>
 
-      <!-- Création -->
-      <div class="create-card">
-        <div class="create-title">Nouveau rendez-vous</div>
-        <form id="form">
+      <!-- Formulaire de création -->
+      <div class="create-box">
+        <h2>Nouveau rendez-vous</h2>
+        <form id="reminder-form">
           <div class="field">
             <label>Titre</label>
-            <input type="text" id="title" required maxlength="120" placeholder="Ex : Dentiste, Réunion client...">
+            <input type="text" id="title" required maxlength="120" placeholder="Ex : Dentiste, Réunion...">
           </div>
           <div class="field">
-            <label>Notes</label>
-            <textarea id="notes" placeholder="Adresse, détails, ce qu'il faut préparer..."></textarea>
+            <label>Notes (optionnel)</label>
+            <textarea id="notes" placeholder="Adresse, détails..."></textarea>
           </div>
           <div class="grid-2">
             <div class="field">
@@ -481,147 +482,164 @@
               <option value="weekly">Chaque semaine</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary" style="margin-top:8px">Ajouter le rappel</button>
+          <button type="submit" class="btn btn-primary" id="create-btn">Ajouter</button>
         </form>
       </div>
 
       <!-- Liste -->
       <div id="loading" class="loading">
         <div class="spinner"></div>
-        Chargement de tes rappels...
+        Chargement...
       </div>
-
       <div id="list"></div>
-
-      <div id="empty" class="empty-state" style="display:none">
-        <div style="font-size:40px;opacity:0.4">📅</div>
-        <p>Aucun rendez-vous pour le moment.<br>Crée-en un ci-dessus.</p>
+      <div id="empty" class="empty" style="display: none;">
+        <div style="font-size: 36px; opacity: 0.35;">📅</div>
+        <p>Aucun rendez-vous.<br>Crée-en un ci-dessus.</p>
       </div>
     </div>
   </div>
 
   <script>
-    // ================== CONFIG ==================
+    // ====================== CONFIG ======================
     const SUPABASE_URL = 'https://kbyansbadnpbfmehdvui.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtieWFuc2JhZG5wYmZtZWhkdnVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5NDcxMjksImV4cCI6MjEwMzUyMzEyOX0.nJTxqvGlesGtmMxpldnvq3gktt416CdH1aRu8KVSATE';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtieWFuc2JhZG5wYmZtZWhkdnVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5NDcxMjksImV4cCI6MjEwMzUyMzEyOX0.nJTxqvGlesGtmMxpldnvq3gktt416CdH1aRu8KVSATE';
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ================== STATE ==================
-    let isLogin = true;
-    let user = null;
+    // ====================== STATE ======================
+    let isLoginMode = true;
+    let currentUser = null;
     let reminders = [];
 
-    // ================== DOM ==================
+    // ====================== DOM ======================
     const authScreen = document.getElementById('auth-screen');
-    const app = document.getElementById('app');
+    const appScreen = document.getElementById('app');
     const authForm = document.getElementById('auth-form');
     const authBtn = document.getElementById('auth-btn');
-    const toggleMode = document.getElementById('toggle-mode');
-    const authError = document.getElementById('auth-error');
-    const form = document.getElementById('form');
-    const list = document.getElementById('list');
-    const loading = document.getElementById('loading');
-    const empty = document.getElementById('empty');
+    const toggleAuth = document.getElementById('toggle-auth');
+    const messageEl = document.getElementById('message');
+    const reminderForm = document.getElementById('reminder-form');
+    const createBtn = document.getElementById('create-btn');
+    const listEl = document.getElementById('list');
+    const loadingEl = document.getElementById('loading');
+    const emptyEl = document.getElementById('empty');
     const logoutBtn = document.getElementById('logout-btn');
-    const avatar = document.getElementById('avatar');
-    const greeting = document.getElementById('greeting');
+    const avatarEl = document.getElementById('avatar');
+    const greetingText = document.getElementById('greeting-text');
+    const userEmailEl = document.getElementById('user-email');
 
-    // ================== AUTH ==================
-    toggleMode.onclick = () => {
-      isLogin = !isLogin;
-      authBtn.textContent = isLogin ? 'Se connecter' : 'Créer un compte';
-      toggleMode.textContent = isLogin 
-        ? "Pas encore de compte ? Créer un compte" 
-        : "Déjà un compte ? Se connecter";
-      authError.style.display = 'none';
-    };
+    // ====================== AUTH ======================
+    toggleAuth.addEventListener('click', () => {
+      isLoginMode = !isLoginMode;
+      authBtn.textContent = isLoginMode ? 'Se connecter' : 'Créer un compte';
+      toggleAuth.textContent = isLoginMode
+        ? 'Pas encore de compte ? Créer un compte'
+        : 'Déjà un compte ? Se connecter';
+      hideMessage();
+    });
 
-    authForm.onsubmit = async (e) => {
+    authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      hideMessage();
+
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       authBtn.disabled = true;
       authBtn.textContent = 'Chargement...';
-      authError.style.display = 'none';
 
       try {
-        const res = isLogin 
-          ? await supabase.auth.signInWithPassword({ email, password })
-          : await supabase.auth.signUp({ email, password });
+        let result;
+        if (isLoginMode) {
+          result = await supabase.auth.signInWithPassword({ email, password });
+        } else {
+          result = await supabase.auth.signUp({ email, password });
+        }
 
-        if (res.error) throw res.error;
+        if (result.error) throw result.error;
 
-        if (!isLogin && !res.data.session) {
-          authError.style.display = 'block';
-          authError.style.background = 'rgba(34,197,94,0.12)';
-          authError.style.color = '#86efac';
-          authError.textContent = 'Compte créé ! Tu peux maintenant te connecter.';
+        // Cas inscription réussie sans session (confirmation email encore active)
+        if (!isLoginMode && !result.data.session) {
+          showMessage('Compte créé avec succès ! Tu peux maintenant te connecter.', 'success');
+          isLoginMode = true;
+          authBtn.textContent = 'Se connecter';
+          toggleAuth.textContent = 'Pas encore de compte ? Créer un compte';
+          document.getElementById('password').value = '';
         }
       } catch (err) {
-        authError.style.display = 'block';
-        authError.textContent = err.message;
+        showMessage(err.message || 'Une erreur est survenue', 'error');
       } finally {
         authBtn.disabled = false;
-        authBtn.textContent = isLogin ? 'Se connecter' : 'Créer un compte';
+        if (isLoginMode) authBtn.textContent = 'Se connecter';
+        else authBtn.textContent = 'Créer un compte';
       }
-    };
+    });
 
-    logoutBtn.onclick = () => supabase.auth.signOut();
+    logoutBtn.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+    });
 
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
-        user = session.user;
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session && session.user) {
+        currentUser = session.user;
         showApp();
-        load();
-        askNotification();
+        loadReminders();
+        requestNotifPermission();
       } else {
-        user = null;
+        currentUser = null;
         showAuth();
       }
     });
 
     function showApp() {
       authScreen.style.display = 'none';
-      app.style.display = 'block';
-      avatar.textContent = (user.email || 'U')[0].toUpperCase();
+      appScreen.style.display = 'block';
+      avatarEl.textContent = (currentUser.email || 'U')[0].toUpperCase();
+      userEmailEl.textContent = currentUser.email;
       setGreeting();
     }
 
     function showAuth() {
-      app.style.display = 'none';
+      appScreen.style.display = 'none';
       authScreen.style.display = 'flex';
     }
 
     function setGreeting() {
-      const h = new Date().getHours();
-      let text = 'Bonjour';
-      if (h >= 18) text = 'Bonsoir';
-      else if (h >= 12) text = 'Bon après-midi';
-      greeting.innerHTML = `${text}<span>${user.email}</span>`;
+      const hour = new Date().getHours();
+      if (hour >= 18) greetingText.textContent = 'Bonsoir';
+      else if (hour >= 12) greetingText.textContent = 'Bon après-midi';
+      else greetingText.textContent = 'Bonjour';
     }
 
-    // ================== NOTIFICATIONS ==================
-    async function askNotification() {
-      if (!('Notification' in window)) return;
-      if (Notification.permission === 'default') {
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.className = 'message ' + type;
+      messageEl.style.display = 'block';
+    }
+
+    function hideMessage() {
+      messageEl.style.display = 'none';
+    }
+
+    // ====================== NOTIFICATIONS ======================
+    async function requestNotifPermission() {
+      if ('Notification' in window && Notification.permission === 'default') {
         await Notification.requestPermission();
       }
     }
 
-    function checkNotifications() {
+    function checkTodayNotifications() {
       if (Notification.permission !== 'granted') return;
-      const today = new Date().toDateString();
+
+      const todayStr = new Date().toDateString();
 
       reminders.forEach(r => {
-        if (r.completed) return;
-        const d = new Date(r.event_at);
-        if (d.toDateString() === today) {
-          const key = `zen_${r.id}_${today}`;
+        const eventDate = new Date(r.event_at);
+        if (eventDate.toDateString() === todayStr) {
+          const key = 'notif_' + r.id + '_' + todayStr;
           if (!localStorage.getItem(key)) {
-            new Notification('ZenRemind', {
-              body: r.title + (r.notes ? '\n' + r.notes.slice(0, 60) : ''),
+            new Notification('ZenRemind – Aujourd\'hui', {
+              body: r.title,
               icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827370.png'
             });
             localStorage.setItem(key, '1');
@@ -630,13 +648,13 @@
       });
     }
 
-    setInterval(checkNotifications, 90 * 1000);
+    setInterval(checkTodayNotifications, 120000);
 
-    // ================== DATA ==================
-    async function load() {
-      loading.style.display = 'block';
-      empty.style.display = 'none';
-      list.innerHTML = '';
+    // ====================== REMINDERS ======================
+    async function loadReminders() {
+      loadingEl.style.display = 'block';
+      emptyEl.style.display = 'none';
+      listEl.innerHTML = '';
 
       const { data, error } = await supabase
         .from('reminders')
@@ -644,7 +662,7 @@
         .eq('completed', false)
         .order('event_at', { ascending: true });
 
-      loading.style.display = 'none';
+      loadingEl.style.display = 'none';
 
       if (error) {
         console.error(error);
@@ -652,28 +670,30 @@
       }
 
       reminders = data || [];
-      render();
-      checkNotifications();
+      renderReminders();
+      checkTodayNotifications();
     }
 
-    function render() {
-      list.innerHTML = '';
+    function renderReminders() {
+      listEl.innerHTML = '';
 
       if (reminders.length === 0) {
-        empty.style.display = 'block';
+        emptyEl.style.display = 'block';
         document.getElementById('stat-today').textContent = '0';
-        document.getElementById('stat-upcoming').textContent = '0';
+        document.getElementById('stat-total').textContent = '0';
         return;
       }
 
-      empty.style.display = 'none';
+      emptyEl.style.display = 'none';
 
       const now = new Date();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const tomorrowStart = new Date(todayStart);
-      tomorrowStart.setDate(tomorrowStart.getDate() + 1);
-      const weekEnd = new Date(todayStart);
-      weekEnd.setDate(weekEnd.getDate() + 7);
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const afterTomorrow = new Date(tomorrow);
+      afterTomorrow.setDate(afterTomorrow.getDate() + 1);
+      const nextWeek = new Date(today);
+      nextWeek.setDate(nextWeek.getDate() + 7);
 
       const groups = {
         today: [],
@@ -684,65 +704,73 @@
 
       reminders.forEach(r => {
         const d = new Date(r.event_at);
-        if (d >= todayStart && d < tomorrowStart) groups.today.push(r);
-        else if (d >= tomorrowStart && d < new Date(tomorrowStart.getTime() + 86400000)) groups.tomorrow.push(r);
-        else if (d < weekEnd) groups.week.push(r);
+        if (d >= today && d < tomorrow) groups.today.push(r);
+        else if (d >= tomorrow && d < afterTomorrow) groups.tomorrow.push(r);
+        else if (d < nextWeek) groups.week.push(r);
         else groups.later.push(r);
       });
 
       document.getElementById('stat-today').textContent = groups.today.length;
-      document.getElementById('stat-upcoming').textContent = reminders.length;
+      document.getElementById('stat-total').textContent = reminders.length;
 
-      const order = [
+      const sections = [
         { key: 'today', label: "Aujourd'hui" },
         { key: 'tomorrow', label: 'Demain' },
         { key: 'week', label: 'Cette semaine' },
         { key: 'later', label: 'Plus tard' }
       ];
 
-      order.forEach(g => {
-        if (groups[g.key].length === 0) return;
+      sections.forEach(section => {
+        const items = groups[section.key];
+        if (items.length === 0) return;
 
-        const section = document.createElement('div');
-        section.className = 'group';
-        section.innerHTML = `<div class="group-title">${g.label}</div>`;
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'group';
+        groupDiv.innerHTML = `<div class="group-title">${section.label}</div>`;
 
-        groups[g.key].forEach(r => {
-          const isToday = g.key === 'today';
-          const el = document.createElement('div');
-          el.className = `reminder ${isToday ? 'today' : ''}`;
+        items.forEach(r => {
+          const isToday = section.key === 'today';
+          const card = document.createElement('div');
+          card.className = 'card' + (isToday ? ' today' : '');
 
-          el.innerHTML = `
-            <div class="reminder-top">
+          let badges = '';
+          if (isToday) badges += '<span class="badge">Aujourd\'hui</span>';
+          if (r.is_recurring) badges += ' <span class="badge weekly">Hebdo</span>';
+
+          card.innerHTML = `
+            <div class="card-header">
               <div>
-                <div class="reminder-title">${esc(r.title)}</div>
-                <div class="reminder-time">
-                  ${formatDate(r.event_at)} · ${formatTime(r.event_at)}
-                </div>
+                <div class="card-title">${escapeHtml(r.title)}</div>
+                <div class="card-meta">${formatDate(r.event_at)} · ${formatTime(r.event_at)}</div>
               </div>
-              <div class="badges">
-                ${isToday ? '<span class="badge today">Aujourd\'hui</span>' : ''}
-                ${r.is_recurring ? '<span class="badge weekly">Hebdo</span>' : ''}
-              </div>
+              <div>${badges}</div>
             </div>
-            ${r.notes ? `<div class="reminder-notes">${esc(r.notes)}</div>` : ''}
-            <div class="reminder-actions">
-              <button class="icon-btn done" title="Terminé" onclick="complete('${r.id}')">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            ${r.notes ? `<div class="card-notes">${escapeHtml(r.notes)}</div>` : ''}
+            <div class="card-actions">
+              <button class="icon-btn done" title="Terminé" data-id="${r.id}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
               </button>
-              <button class="icon-btn delete" title="Supprimer" onclick="remove('${r.id}')">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              <button class="icon-btn delete" title="Supprimer" data-id="${r.id}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
               </button>
             </div>
           `;
-          section.appendChild(el);
+          groupDiv.appendChild(card);
         });
 
-        list.appendChild(section);
+        listEl.appendChild(groupDiv);
+      });
+
+      // Events
+      document.querySelectorAll('.icon-btn.done').forEach(btn => {
+        btn.addEventListener('click', () => completeReminder(btn.dataset.id));
+      });
+      document.querySelectorAll('.icon-btn.delete').forEach(btn => {
+        btn.addEventListener('click', () => deleteReminder(btn.dataset.id));
       });
     }
 
-    form.onsubmit = async (e) => {
+    reminderForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const title = document.getElementById('title').value.trim();
@@ -751,87 +779,99 @@
       const time = document.getElementById('time').value;
       const recurrence = document.getElementById('recurrence').value;
 
-      const eventAt = new Date(`${date}T${time}:00`).toISOString();
+      if (!title || !date || !time) return;
 
-      const base = {
-        title,
+      createBtn.disabled = true;
+      createBtn.textContent = 'Ajout...';
+
+      const eventAt = new Date(date + 'T' + time + ':00').toISOString();
+
+      const payload = {
+        title: title,
         notes: notes || null,
         event_at: eventAt,
         is_recurring: recurrence === 'weekly',
         recurrence_type: recurrence,
-        user_id: user.id
+        user_id: currentUser.id
       };
 
-      const { error } = await supabase.from('reminders').insert(base);
-      if (error) {
-        alert('Erreur : ' + error.message);
-        return;
-      }
+      try {
+        const { error } = await supabase.from('reminders').insert(payload);
+        if (error) throw error;
 
-      // Si hebdomadaire → créer 5 occurrences
-      if (recurrence === 'weekly') {
-        const start = new Date(`${date}T${time}:00`);
-        for (let i = 1; i <= 5; i++) {
-          const next = new Date(start);
-          next.setDate(next.getDate() + 7 * i);
-          await supabase.from('reminders').insert({
-            ...base,
-            event_at: next.toISOString()
-          });
+        // Si hebdomadaire, on crée 4 occurrences supplémentaires
+        if (recurrence === 'weekly') {
+          const baseDate = new Date(date + 'T' + time + ':00');
+          for (let i = 1; i <= 4; i++) {
+            const next = new Date(baseDate);
+            next.setDate(next.getDate() + (7 * i));
+            await supabase.from('reminders').insert({
+              ...payload,
+              event_at: next.toISOString()
+            });
+          }
         }
+
+        reminderForm.reset();
+        setDefaultDateTime();
+        await loadReminders();
+      } catch (err) {
+        alert('Erreur : ' + err.message);
+      } finally {
+        createBtn.disabled = false;
+        createBtn.textContent = 'Ajouter';
       }
+    });
 
-      form.reset();
-      setDefaultDateTime();
-      await load();
-    };
-
-    window.complete = async (id) => {
+    async function completeReminder(id) {
       await supabase.from('reminders').update({ completed: true }).eq('id', id);
-      load();
-    };
+      loadReminders();
+    }
 
-    window.remove = async (id) => {
+    async function deleteReminder(id) {
       if (!confirm('Supprimer ce rappel ?')) return;
       await supabase.from('reminders').delete().eq('id', id);
-      load();
-    };
+      loadReminders();
+    }
 
-    // ================== UTILS ==================
-    function esc(str) {
-      const d = document.createElement('div');
-      d.textContent = str || '';
-      return d.innerHTML;
+    // ====================== UTILS ======================
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text || '';
+      return div.innerHTML;
     }
 
     function formatDate(iso) {
       return new Date(iso).toLocaleDateString('fr-FR', {
-        weekday: 'short', day: 'numeric', month: 'short'
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short'
       });
     }
 
     function formatTime(iso) {
       return new Date(iso).toLocaleTimeString('fr-FR', {
-        hour: '2-digit', minute: '2-digit'
+        hour: '2-digit',
+        minute: '2-digit'
       });
     }
 
     function setDefaultDateTime() {
       const now = new Date();
-      now.setMinutes(now.getMinutes() + 30); // +30 min par défaut
+      now.setMinutes(now.getMinutes() + 30);
       document.getElementById('date').value = now.toISOString().slice(0, 10);
       document.getElementById('time').value = now.toTimeString().slice(0, 5);
     }
 
-    // Init
+    // ====================== INIT ======================
     setDefaultDateTime();
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        user = session.user;
+      if (session && session.user) {
+        currentUser = session.user;
         showApp();
-        load();
-        askNotification();
+        loadReminders();
+        requestNotifPermission();
       }
     });
   </script>
