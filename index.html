@@ -17,14 +17,9 @@
       --primary-hover: #7c3aed;
       --green: #22c55e;
       --red: #ef4444;
-      --radius: 14px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
@@ -34,7 +29,7 @@
       line-height: 1.5;
     }
 
-    /* ========== AUTH ========== */
+    /* AUTH */
     #auth-screen {
       min-height: 100vh;
       display: flex;
@@ -70,9 +65,7 @@
       margin-bottom: 28px;
     }
 
-    .field {
-      margin-bottom: 16px;
-    }
+    .field { margin-bottom: 16px; }
 
     label {
       display: block;
@@ -91,7 +84,6 @@
       color: var(--text);
       font-size: 15px;
       outline: none;
-      transition: border-color 0.2s;
     }
 
     input:focus, textarea:focus, select:focus {
@@ -173,10 +165,8 @@
       color: #86efac;
     }
 
-    /* ========== APP ========== */
-    #app {
-      display: none;
-    }
+    /* APP */
+    #app { display: none; }
 
     .container {
       max-width: 620px;
@@ -235,11 +225,8 @@
       color: var(--muted);
     }
 
-    .stat strong {
-      color: var(--text);
-    }
+    .stat strong { color: var(--text); }
 
-    /* Formulaire */
     .create-box {
       background: var(--card);
       border: 1px solid var(--border);
@@ -261,15 +248,10 @@
     }
 
     @media (max-width: 480px) {
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
+      .grid-2 { grid-template-columns: 1fr; }
     }
 
-    /* Groupes */
-    .group {
-      margin-bottom: 28px;
-    }
+    .group { margin-bottom: 28px; }
 
     .group-title {
       font-size: 12px;
@@ -281,19 +263,15 @@
       padding-left: 2px;
     }
 
-    /* Carte */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 15px 16px;
       margin-bottom: 10px;
-      transition: 0.15s;
     }
 
-    .card:hover {
-      border-color: #3f3f46;
-    }
+    .card:hover { border-color: #3f3f46; }
 
     .card.today {
       border-color: rgba(139, 92, 246, 0.45);
@@ -355,7 +333,6 @@
       cursor: pointer;
       display: grid;
       place-items: center;
-      transition: 0.15s;
     }
 
     .icon-btn:hover {
@@ -444,7 +421,7 @@
         </div>
         <div class="user-area">
           <div class="avatar" id="avatar">?</div>
-          <button class="btn btn-ghost" style="width: auto; padding: 7px 12px; font-size: 13px;" id="logout-btn">Déconnexion</button>
+          <button class="btn btn-ghost" style="width:auto;padding:7px 12px;font-size:13px" id="logout-btn">Déconnexion</button>
         </div>
       </header>
 
@@ -453,7 +430,6 @@
         <div class="stat">À venir <strong id="stat-total">0</strong></div>
       </div>
 
-      <!-- Formulaire de création -->
       <div class="create-box">
         <h2>Nouveau rendez-vous</h2>
         <form id="reminder-form">
@@ -486,14 +462,13 @@
         </form>
       </div>
 
-      <!-- Liste -->
       <div id="loading" class="loading">
         <div class="spinner"></div>
         Chargement...
       </div>
       <div id="list"></div>
-      <div id="empty" class="empty" style="display: none;">
-        <div style="font-size: 36px; opacity: 0.35;">📅</div>
+      <div id="empty" class="empty" style="display:none">
+        <div style="font-size:36px;opacity:0.35">📅</div>
         <p>Aucun rendez-vous.<br>Crée-en un ci-dessus.</p>
       </div>
     </div>
@@ -504,7 +479,8 @@
     const SUPABASE_URL = 'https://kbyansbadnpbfmehdvui.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtieWFuc2JhZG5wYmZtZWhkdnVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5NDcxMjksImV4cCI6MjEwMzUyMzEyOX0.nJTxqvGlesGtmMxpldnvq3gktt416CdH1aRu8KVSATE';
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Correction du conflit de nom
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // ====================== STATE ======================
     let isLoginMode = true;
@@ -551,14 +527,13 @@
       try {
         let result;
         if (isLoginMode) {
-          result = await supabase.auth.signInWithPassword({ email, password });
+          result = await client.auth.signInWithPassword({ email, password });
         } else {
-          result = await supabase.auth.signUp({ email, password });
+          result = await client.auth.signUp({ email, password });
         }
 
         if (result.error) throw result.error;
 
-        // Cas inscription réussie sans session (confirmation email encore active)
         if (!isLoginMode && !result.data.session) {
           showMessage('Compte créé avec succès ! Tu peux maintenant te connecter.', 'success');
           isLoginMode = true;
@@ -570,16 +545,15 @@
         showMessage(err.message || 'Une erreur est survenue', 'error');
       } finally {
         authBtn.disabled = false;
-        if (isLoginMode) authBtn.textContent = 'Se connecter';
-        else authBtn.textContent = 'Créer un compte';
+        authBtn.textContent = isLoginMode ? 'Se connecter' : 'Créer un compte';
       }
     });
 
     logoutBtn.addEventListener('click', async () => {
-      await supabase.auth.signOut();
+      await client.auth.signOut();
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    client.auth.onAuthStateChange((_event, session) => {
       if (session && session.user) {
         currentUser = session.user;
         showApp();
@@ -630,7 +604,6 @@
 
     function checkTodayNotifications() {
       if (Notification.permission !== 'granted') return;
-
       const todayStr = new Date().toDateString();
 
       reminders.forEach(r => {
@@ -656,7 +629,7 @@
       emptyEl.style.display = 'none';
       listEl.innerHTML = '';
 
-      const { data, error } = await supabase
+      const { data, error } = await client
         .from('reminders')
         .select('*')
         .eq('completed', false)
@@ -695,12 +668,7 @@
       const nextWeek = new Date(today);
       nextWeek.setDate(nextWeek.getDate() + 7);
 
-      const groups = {
-        today: [],
-        tomorrow: [],
-        week: [],
-        later: []
-      };
+      const groups = { today: [], tomorrow: [], week: [], later: [] };
 
       reminders.forEach(r => {
         const d = new Date(r.event_at);
@@ -761,7 +729,6 @@
         listEl.appendChild(groupDiv);
       });
 
-      // Events
       document.querySelectorAll('.icon-btn.done').forEach(btn => {
         btn.addEventListener('click', () => completeReminder(btn.dataset.id));
       });
@@ -787,7 +754,7 @@
       const eventAt = new Date(date + 'T' + time + ':00').toISOString();
 
       const payload = {
-        title: title,
+        title,
         notes: notes || null,
         event_at: eventAt,
         is_recurring: recurrence === 'weekly',
@@ -796,16 +763,15 @@
       };
 
       try {
-        const { error } = await supabase.from('reminders').insert(payload);
+        const { error } = await client.from('reminders').insert(payload);
         if (error) throw error;
 
-        // Si hebdomadaire, on crée 4 occurrences supplémentaires
         if (recurrence === 'weekly') {
           const baseDate = new Date(date + 'T' + time + ':00');
           for (let i = 1; i <= 4; i++) {
             const next = new Date(baseDate);
             next.setDate(next.getDate() + (7 * i));
-            await supabase.from('reminders').insert({
+            await client.from('reminders').insert({
               ...payload,
               event_at: next.toISOString()
             });
@@ -824,13 +790,13 @@
     });
 
     async function completeReminder(id) {
-      await supabase.from('reminders').update({ completed: true }).eq('id', id);
+      await client.from('reminders').update({ completed: true }).eq('id', id);
       loadReminders();
     }
 
     async function deleteReminder(id) {
       if (!confirm('Supprimer ce rappel ?')) return;
-      await supabase.from('reminders').delete().eq('id', id);
+      await client.from('reminders').delete().eq('id', id);
       loadReminders();
     }
 
@@ -866,7 +832,7 @@
     // ====================== INIT ======================
     setDefaultDateTime();
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    client.auth.getSession().then(({ data: { session } }) => {
       if (session && session.user) {
         currentUser = session.user;
         showApp();
